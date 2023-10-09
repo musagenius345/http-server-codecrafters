@@ -38,9 +38,8 @@ const server = net.createServer((socket) => {
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${randomString.length}${CRLF}${randomString}`;
     } else if (userAgentEndPoint) {
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${userAgent.length}${CRLF}${userAgent}`
-    }
-    else if (path.startsWith('/files/') && method === 'GET') {
-      const directory = process.argv[3];
+    } else if (path.startsWith('/files/') && method === 'GET') {
+      const directory = process.argv[2];
       const filename = path.split('/files/')[1];
       const filePath = path.join(directory, filename);
 
