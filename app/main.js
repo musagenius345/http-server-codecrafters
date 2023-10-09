@@ -30,9 +30,8 @@ const server = net.createServer((socket) => {
     }
     socket.write(response, "utf-8", () => {
       console.log('Response sent to client')
-      socket.end('close', () => {
-        console.log('Server disconnnected')
-      })
+      socket.end()
+      console.log('Server Disconnected')
     })
   })
 
