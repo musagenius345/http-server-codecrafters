@@ -23,7 +23,7 @@ const server = net.createServer((socket) => {
     let response;
 
     console.log(`Path: ${path}`);
-    console.log(`Header ${header.toString()}`);
+    console.log(`Header ${headers}`);
 
     if (path === '/') {
       response = `HTTP/1.1 200 OK${CLRF}`;
