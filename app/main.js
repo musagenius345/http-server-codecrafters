@@ -28,13 +28,13 @@ const server = net.createServer((socket) => {
     let response;
 
     console.log(`Path: ${path}`);
-    console.log(`user agent: ${userAgent}`);
+    console.log(`user agent: ${userAgent}, method: ${method}`);
 
     if (path === '/') {
       response = `HTTP/1.1 200 OK${CRLF}`;
     } else if (echoEndPoint) {
       const randomString = path.replace(/^\/echo\//, '');
-      console.log('Random String: ', randomString);
+      // console.log('Random String: ', randomString);
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${randomString.length}${CRLF}${randomString}`;
     } else if (userAgentEndPoint) {
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${userAgent.length}${CRLF}${userAgent}`
@@ -42,7 +42,7 @@ const server = net.createServer((socket) => {
       const directory = process.argv[2];
       const filename = path.split('/files/')[1];
       const filePath = path.join(directory, filename);
-
+      console.log(`directory: ${directory}\nfilename: ${filename}\nfile path: ${filePath}`)
       if (fs.existsSync(filePath)) {
         const fileContent = fs.readFileSync(filePath);
         response = `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${fileContent.length}\r\n\r\n${fileContent}`;
