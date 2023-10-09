@@ -14,7 +14,7 @@ const HOST = 'localhost'
   * */
 function parseRequest(req){
   const [startLine, ...headers] = req.split(CLRF)
-  const [method, path, version] = startLine.split('')
+  const [method, path, version] = startLine
   return [method, path, version]
 }
 
