@@ -15,41 +15,34 @@ function parseRequest(req) {
   const userAgent = headerObject['User-Agent']
   console.log(headers)
   const [method, path, version] = startLine.split(' ')
-  return [method, path, userAgent]
+  return [path, userAgent]
 }
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
 
-    const [method, path, userAgent] = parseRequest(data.toString().trim());
+    const [path, userAgent] = parseRequest(data.toString().trim());
     const echoEndPoint = path.startsWith('/echo/');
     const userAgentEndPoint = path === '/user-agent'
     let response;
 
     console.log(`Path: ${path}`);
-    console.log(`user agent: ${userAgent}, method: ${method}`);
+    console.log(`user agent: ${userAgent}`);
 
     if (path === '/') {
       response = `HTTP/1.1 200 OK${CRLF}`;
     } else if (echoEndPoint) {
       const randomString = path.replace(/^\/echo\//, '');
-      // console.log('Random String: ', randomString);
+      console.log('Random String: ', randomString);
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${randomString.length}${CRLF}${randomString}`;
     } else if (userAgentEndPoint) {
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${userAgent.length}${CRLF}${userAgent}`
-    } else if (path.startsWith('/files/') && method === 'GET') {
-      const directory = process.argv[2];
-      const filename = path.split('/files/')[1];
-      const filePath = path.join(directory, filename);
-      console.log(`directory: ${directory}\nfilename: ${filename}\nfile path: ${filePath}`)
-      if (fs.existsSync(filePath)) {
-        const fileContent = fs.readFileSync(filePath);
-        response = `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${fileContent.length}\r\n\r\n${fileContent}`;
-      } else {
-      response = `HTTP/1.1 404 Not Found${CRLF}`;
-      }
     }
+    else {
+      response = `HTTP/1.1 404 Not Found${CRLF}`;
+    }
+
 
     socket.write(response, "utf-8", () => {
       console.log('Response sent to client')
