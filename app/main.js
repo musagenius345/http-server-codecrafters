@@ -46,15 +46,13 @@ const server = net.createServer((socket) => {
       const directory = process.argv[3]
       const filePath = pathjoin.join(directory, filename)
       console.log('filePath: ', filePath)
-      console.log(`directory: ${directory}\nfile name: ${filename}`)
-      // if (fs.existsSync(filePath)) {
-      //   const fileContent = fs.readFileSync(filePath);
-      //   const response = `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${fileContent.length}\r\n\r\n${fileContent}`;
-      //   socket.write(response, 'utf-8', () => {
-      //     console.log('Response sent, connection closed');
-      //     socket.end();
-      //   });
-      // } 
+      // console.log(`directory: ${directory}\nfile name: ${filename}`)
+      if (fs.existsSync(filePath)) {
+        const fileContent = fs.readFileSync(filePath);
+        response = `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${fileContent.length}\r\n\r\n${fileContent}`;
+      } else{
+        response = `HTTP/1.1 404 Not Found${CRLF}`;
+      } 
     }
     else {
       response = `HTTP/1.1 404 Not Found${CRLF}`;
