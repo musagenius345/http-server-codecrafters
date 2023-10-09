@@ -22,15 +22,15 @@ function parseRequest(req) {
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
     const path = parseRequest(data.toString().trim())
+    const echoEndPoint = path.startsWith('/echo/')
     let response
     console.log(path)
     switch (path) {
       case '/':
         response = `HTTP/1.1 200 OK${CLRF}`;
         break
-      case(path.startsWith('/echo')):
-        const body = path.split('/')
-        const randomString = body[body.length - 1]
+      case echoEndPoint:
+        const randomString = path.replace('/echo/', '') 
         console.log('Body: ',  body)
         console.log('Random String: ',  randomString)
         response = `HTTP/1.1 200 OK${CLRF}Content-Type: text/plain${CLRF}Content-Length: ${body.length}${CLRF}${randomString}`
