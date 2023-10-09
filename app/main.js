@@ -9,9 +9,10 @@ const HOST = 'localhost'
 
 function parseRequest(req) {
   const [startLine, ...headers] = req.split('\r\n')
-  const userAgentLine = headers.find((line) => line.startsWith('User-Agent: ')); 
-  const userAgent = userAgentLine ? userAgentLine.split(' ')[1] : '';
-   console.log(headers)   
+
+const headerObject = Object.fromEntries(headers.map(line => line.split(': ')));
+  const userAgent = headerObject['User-Agent']
+  console.log(headers)   
   const [method, path, version] = startLine.split(' ')
   return [path, userAgent]
 }
