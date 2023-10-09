@@ -2,42 +2,43 @@ const net = require("net");
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
-const CLRF = '\r\n\r\n'
+const CRLF = '\r\n\r\n'
 const PORT = 4221
 const HOST = 'localhost'
 
 
 function parseRequest(req) {
-  const [startLine, ...headers] = req.split(CLRF)
+  const [startLine, ...headers] = req.split(CRLF)
+  const userAgentLine = headers.find((line) => line.startsWith('User-Agent: '));
+  const userAgent = userAgentLine ? userAgentLine.match(/User-Agent: (.+)/)[1] : '';
+      
   const [method, path, version] = startLine.split(' ')
-  return [path, headers]
+  return [path, userAgent]
 }
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
 
-    const [path, headers] = parseRequest(data.toString().trim());
+    const [path, userAgent] = parseRequest(data.toString().trim());
     const echoEndPoint = path.startsWith('/echo/');
     const userAgentEndPoint = path.startsWith('/user-agent');
     let response;
 
     console.log(`Path: ${path}`);
-    console.log(`Header ${headers}`);
+    console.log(`user agent: ${userAgent}`);
 
     if (path === '/') {
-      response = `HTTP/1.1 200 OK${CLRF}`;
+      response = `HTTP/1.1 200 OK${CRLF}`;
     } else if (echoEndPoint) {
       const randomString = path.replace(/^\/echo\//, '');
       console.log('Random String: ', randomString);
-      response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${randomString.length}${CLRF}${randomString}`;
+      response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${randomString.length}${CRLF}${randomString}`;
     } else if(userAgentEndPoint){
-      //const userAgentLine = headers.find((line) => line.startsWith('User-Agent: '));
-      //const userAgent = userAgentLine ? userAgentLine.match(/User-Agent: (.+)/)[1] : '';
-      response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 11\r\ncurl/7.64.1`
+      response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 11\${CRLF}${userAgent}`
     }
     else {
-      response = `HTTP/1.1 404 Not Found${CLRF}`;
+      response = `HTTP/1.1 404 Not Found${CRLF}`;
     }
 
 
