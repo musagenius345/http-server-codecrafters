@@ -32,7 +32,6 @@ const server = net.createServer((socket) => {
       response = `HTTP/1.1 200 OK${CLRF}`;
     } else if (echoEndPoint) {
       const randomString = path.replace(/^\/echo\//, '');
-      console.log('Body: ', body);
       console.log('Random String: ', randomString);
       response = `HTTP/1.1 200 OK${CLRF}Content-Type: text/plain${CLRF}Content-Length: ${body.length}${CLRF}${randomString}`;
     } else {
