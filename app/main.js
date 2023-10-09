@@ -8,7 +8,12 @@ const server = net.createServer((socket) => {
   socket.on("data", (data) => {
 
     let successResponse = 'HTTP/1.1 200 OK\r\n\r\n' 
-    socket.write(successResponse, "utf-8")
+    socket.write(successResponse, "utf-8", () => {
+      console.log('Response sent to client')
+      socket.end('close', () => {
+        console.log('Server disconnnected')
+      })
+    })
   })
 
   socket.on("close", () => {
