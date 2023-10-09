@@ -12,20 +12,20 @@ const HOST = 'localhost'
 /**
   *@param {Buffer} req 
   * */
-function parseRequest(req){
+function parseRequest(req) {
   const [startLine, ...headers] = req.split(CLRF)
   const [method, path, version] = startLine.split(' ')
-  return [method, path, version]
+  return path
 }
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
-    const [path] = parseRequest(data.trim())
+    const path = parseRequest(data.toSting().trim())
     let response
     console.log(path)
-    if(path === '/'){
-      response= `HTTP/1.1 200 OK${CLRF}`
+    if (path === '/') {
+      response = `HTTP/1.1 200 OK${CLRF}`
     } else {
       response = `HTTP/1.1 400 Not Found${CLRF}`
     }
@@ -36,7 +36,7 @@ const server = net.createServer((socket) => {
     })
   })
 
-  
+
 });
 
-server.listen(PORT,HOST);
+server.listen(PORT, HOST);
