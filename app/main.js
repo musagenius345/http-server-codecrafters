@@ -19,7 +19,7 @@ function parseRequest(req){
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
-    const path = parseRequest(data.toString())
+    const path = parseRequest(data.toString().trim())
     let response
     if(path === '/'){
       response= `HTTP/1.1 200 OK${CLRF}`
