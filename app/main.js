@@ -24,6 +24,7 @@ const server = net.createServer((socket) => {
 
     const [path, userAgent] = parseRequest(data.toString().trim());
     const echoEndPoint = path.startsWith('/echo/');
+    const filesEndPoint = path.startsWith('/files/');
     const userAgentEndPoint = path === '/user-agent'
     let response;
 
@@ -38,6 +39,8 @@ const server = net.createServer((socket) => {
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${randomString.length}${CRLF}${randomString}`;
     } else if (userAgentEndPoint) {
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${userAgent.length}${CRLF}${userAgent}`
+    } else if(method === 'GET' &&  filesEndPoint){
+      console.log(`method: ${method}\n path: ${path}`)
     }
     else {
       response = `HTTP/1.1 404 Not Found${CRLF}`;
