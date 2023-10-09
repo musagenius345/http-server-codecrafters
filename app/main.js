@@ -1,5 +1,6 @@
 const net = require("net");
 
+const fs = require("fs")
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
 const CRLF = '\r\n\r\n'
@@ -14,14 +15,14 @@ function parseRequest(req) {
   const userAgent = headerObject['User-Agent']
   console.log(headers)
   const [method, path, version] = startLine.split(' ')
-  return [path, userAgent]
+  return [method, path, userAgent]
 }
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
 
-    const [path, userAgent] = parseRequest(data.toString().trim());
+    const [method, path, userAgent] = parseRequest(data.toString().trim());
     const echoEndPoint = path.startsWith('/echo/');
     const userAgentEndPoint = path === '/user-agent'
     let response;
