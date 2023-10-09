@@ -27,7 +27,7 @@ const server = net.createServer((socket) => {
     if (path === '/') {
       response = `HTTP/1.1 200 OK${CLRF}`
     } else {
-      response = `HTTP/1.1 400 Not Found${CLRF}`
+      response = `HTTP/1.1 404 Not Found${CLRF}`
     }
     socket.write(response, "utf-8", () => {
       console.log('Response sent to client')
