@@ -7,10 +7,13 @@ const CLRF = '\r\n\r\n'
 //
 // Host: localhost:4221
 // User-Agent: curl/7.64.1
+/**
+  *@param {Buffer} req 
+  * */
 function parseRequest(req){
-  const [startLine, ...headers] = req.split(CLRF)
-  const path = startLine[1]
-  return path
+  const [startLine, ...headers] = req.toString().split(CLRF)
+  const [method, path, version] = startLine.split('')
+  return [method, path, version]
 }
 
 // Uncomment this to pass the first stage
@@ -18,7 +21,7 @@ const server = net.createServer((socket) => {
   socket.on("data", (data) => {
     const path = parseRequest(data)
     let response
-    if(path.startsWith('/')){
+    if(path === '/'){
       response= `HTTP/1.1 200 OK${CLRF}`
     } else {
       response = `HTTP/1.1 400 Not Found${CLRF}`
