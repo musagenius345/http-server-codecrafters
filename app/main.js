@@ -40,7 +40,7 @@ const server = net.createServer((socket) => {
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${randomString.length}${CRLF}${randomString}`;
     } else if (userAgentEndPoint) {
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${userAgent.length}${CRLF}${userAgent}`
-    } else if(method === 'GET' &&  filesEndPoint){
+    } else if (method === 'GET' && filesEndPoint) {
       console.log(`method: ${method}\n path: ${path}`)
       const filename = path.replace(/^\/files\//, '')
       const directory = process.argv[3]
@@ -50,10 +50,21 @@ const server = net.createServer((socket) => {
       if (fs.existsSync(filePath)) {
         const fileContent = fs.readFileSync(filePath);
         response = `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${fileContent.length}\r\n\r\n${fileContent}`;
-      } else{
+      } else {
         response = `HTTP/1.1 404 Not Found${CRLF}`;
-      } 
+      }
+    } else if (method === 'POST' && filesEndPoint) {
+      console.log(`method: ${method}\n path: ${path}`)
+      const filename = path.replace(/^\/files\//, '')
+      const directory = process.argv[3]
+      const filePath = pathjoin.join(directory, filename)
+      console.log('filePath: ', filePath)
+      const fileContent = fs.readFileSync(filePath);
+      fs.writeFileSync(filePath,fileContent);
+      response = 'HTTP/1.1 201 CREATED\r\n\r\n';
+
     }
+
     else {
       response = `HTTP/1.1 404 Not Found${CRLF}`;
     }
