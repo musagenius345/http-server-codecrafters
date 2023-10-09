@@ -36,7 +36,7 @@ const server = net.createServer((socket) => {
       console.log('Random String: ', randomString);
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${randomString.length}${CRLF}${randomString}`;
     } else if(userAgentEndPoint){
-      response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 11\${CRLF}${userAgent}`
+      response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 11${CRLF}${userAgent}`
     }
     else {
       response = `HTTP/1.1 404 Not Found${CRLF}`;
