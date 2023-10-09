@@ -17,7 +17,7 @@ function parseRequest(req) {
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
 
-    const [path, header] = parseRequest(data.toString().trim());
+    const [path, headers] = parseRequest(data.toString().trim());
     const echoEndPoint = path.startsWith('/echo/');
     const userAgentEndPoint = path.startsWith('/user-agent');
     let response;
@@ -32,9 +32,8 @@ const server = net.createServer((socket) => {
       console.log('Random String: ', randomString);
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${randomString.length}${CLRF}${randomString}`;
     } else if(userAgentEndPoint){
-      j
-const userAgentLine = headers.find((line) => line.startsWith('User-Agent: '));
-const userAgent = userAgentLine ? userAgentLine.match(/User-Agent: (.+)/)[1] : '';
+      //const userAgentLine = headers.find((line) => line.startsWith('User-Agent: '));
+      //const userAgent = userAgentLine ? userAgentLine.match(/User-Agent: (.+)/)[1] : '';
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 11\r\ncurl/7.64.1`
     }
     else {
