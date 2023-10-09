@@ -57,7 +57,7 @@ const server = net.createServer((socket) => {
       const filename = path.replace(/^\/files\//, '')
       const directory = process.argv[3]
       const filePath = pathjoin.join(directory, filename)
-      const fileContent = data.split(CRLF)[1];
+      const fileContent = data.split('\r\n\r\n')[1];
       
       console.log(`filePath: ${filePath}\nfileContent: ${fileContent}\ndirectory:${directory}`)
       fs.writeFileSync(filePath, body);
