@@ -24,11 +24,19 @@ const server = net.createServer((socket) => {
     const path = parseRequest(data.toString().trim())
     let response
     console.log(path)
-    if (path === '/') {
-      response = `HTTP/1.1 200 OK${CLRF}`
-    } else {
-      response = `HTTP/1.1 404 Not Found${CLRF}`
+    switch (path) {
+      case '/':
+        response = `HTTP/1.1 200 OK${CLRF}`;
+        break
+      case(path.startsWith('/echo/')):
+        const body = path.split('/').at(-1)
+        console.log('Body: ',  body)
+        response = `HTTP/1.1 200 OK${CLRF}Content-Type: text/plain${CLRF}Content-Length: ${body.length}${CLRF}${body}`
+        break
+      default:
+        response = `HTTP/1.1 404 Not Found${CLRF}`;
     }
+    
     socket.write(response, "utf-8", () => {
       console.log('Response sent to client')
       socket.end()
