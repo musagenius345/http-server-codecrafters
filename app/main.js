@@ -11,19 +11,19 @@ const HOST = 'localhost'
 
 function parseRequest(req) {
   const [startLine, ...headers] = req.split('\r\n')
-
+  const responseBody = headers[headers.length - 1]
   const headerObject = Object.fromEntries(headers.map(line => line.split(': ')));
   const userAgent = headerObject['User-Agent']
   // console.log(headers)
   const [method, path, version] = startLine.split(' ')
-  return [ method, path, userAgent]
+  return [ method, path, userAgent, responseBody]
 }
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
 
-    const [method, path, userAgent] = parseRequest(data.toString().trim());
+    const [method, path, userAgent, responseBody] = parseRequest(data.toString().trim());
     const echoEndPoint = path.startsWith('/echo/');
     const filesEndPoint = path.startsWith('/files/');
     const userAgentEndPoint = path === '/user-agent'
@@ -57,7 +57,7 @@ const server = net.createServer((socket) => {
       const filename = path.replace(/^\/files\//, '')
       const directory = process.argv[3]
       const filePath = pathjoin.join(directory, filename)
-      const fileContent = data.split('\r\n\r\n')[1];
+      const fileContent = responseBody;
       
       console.log(`filePath: ${filePath}\nfileContent: ${fileContent}\ndirectory:${directory}`)
       fs.writeFileSync(filePath, body);
