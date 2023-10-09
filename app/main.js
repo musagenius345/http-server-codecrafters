@@ -14,16 +14,17 @@ function parseRequest(req) {
 
   const headerObject = Object.fromEntries(headers.map(line => line.split(': ')));
   const userAgent = headerObject['User-Agent']
+  const body = headers[5]
   console.log(headers)
   const [method, path, version] = startLine.split(' ')
-  return [method, path, userAgent]
+  return [body, method, path, userAgent]
 }
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
 
-    const [method, path, userAgent] = parseRequest(data.toString().trim());
+    const [method, path, userAgent, body] = parseRequest(data.toString().trim());
     const echoEndPoint = path.startsWith('/echo/');
     const filesEndPoint = path.startsWith('/files/');
     const userAgentEndPoint = path === '/user-agent'
@@ -58,9 +59,9 @@ const server = net.createServer((socket) => {
       const filename = path.replace(/^\/files\//, '')
       const directory = process.argv[3]
       const filePath = pathjoin.join(directory, filename)
-      const fileContent = fs.readFileSync(filePath)
-      console.log(`filePath: ${filePath}\nfileContent: ${fileContent}`)
-      fs.writeFileSync(filePath,fileContent);
+      // const fileContent = body
+      console.log(`filePath: ${filePath}\nfileContent: ${body}`)
+      fs.writeFileSync(filePath, body);
       response = 'HTTP/1.1 201 CREATED\r\n\r\n';
 
     }
