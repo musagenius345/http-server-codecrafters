@@ -41,11 +41,11 @@ const server = net.createServer((socket) => {
     } else if (userAgentEndPoint) {
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${userAgent.length}${CRLF}${userAgent}`
     } else if (method === 'GET' && filesEndPoint) {
-      console.log(`method: ${method}\n path: ${path}`)
+      // console.log(`method: ${method}\n path: ${path}`)
       const filename = path.replace(/^\/files\//, '')
       const directory = process.argv[3]
       const filePath = pathjoin.join(directory, filename)
-      console.log('filePath: ', filePath)
+      // console.log('filePath: ', filePath)
       // console.log(`directory: ${directory}\nfile name: ${filename}`)
       if (fs.existsSync(filePath)) {
         const fileContent = fs.readFileSync(filePath);
@@ -58,8 +58,8 @@ const server = net.createServer((socket) => {
       const filename = path.replace(/^\/files\//, '')
       const directory = process.argv[3]
       const filePath = pathjoin.join(directory, filename)
-      console.log('filePath: ', filePath)
-      const fileContent = fs.readFileSync(filePath);
+      const fileContent = fs.readFileSync(filePath)
+      console.log(`filePath: ${filePath}\nfileContent: ${fileContent}`)
       fs.writeFileSync(filePath,fileContent);
       response = 'HTTP/1.1 201 CREATED\r\n\r\n';
 
