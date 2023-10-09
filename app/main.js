@@ -28,10 +28,12 @@ const server = net.createServer((socket) => {
       case '/':
         response = `HTTP/1.1 200 OK${CLRF}`;
         break
-      case(path.startsWith('/echo/')):
-        const body = path.split('/').at(-1)
+      case(path.startsWith('/echo')):
+        const body = path.split('/')
+        const randomString = body[body.length - 1]
         console.log('Body: ',  body)
-        response = `HTTP/1.1 200 OK${CLRF}Content-Type: text/plain${CLRF}Content-Length: ${body.length}${CLRF}${body}`
+        console.log('Random String: ',  randomString)
+        response = `HTTP/1.1 200 OK${CLRF}Content-Type: text/plain${CLRF}Content-Length: ${body.length}${CLRF}${randomString}`
         break
       default:
         response = `HTTP/1.1 404 Not Found${CLRF}`;
