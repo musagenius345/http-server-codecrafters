@@ -57,10 +57,10 @@ const server = net.createServer((socket) => {
       const filename = path.replace(/^\/files\//, '')
       const directory = process.argv[3]
       const filePath = pathjoin.join(directory, filename)
-      const fileContent = responseBody;
+      //const fileContent = responseBody;
       
-      console.log(`filePath: ${filePath}\nfileContent: ${fileContent}\ndirectory:${directory}`)
-      fs.writeFileSync(filePath, body);
+      console.log(`filePath: ${filePath}\nfileContent: ${responseBody}\ndirectory:${directory}`)
+      fs.writeFileSync(filePath, responseBody);
       response = 'HTTP/1.1 201 CREATED\r\n\r\n';
 
     }
