@@ -5,6 +5,12 @@ console.log("Logs from your program will appear here!");
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
+  socket.on("data", (data) => {
+
+    let successResponse = 'HTTP/1.1 200 OK\r\n\r\n' 
+    socket.write(successResponse, "utf-8")
+  })
+
   socket.on("close", () => {
     socket.end();
     server.close();
