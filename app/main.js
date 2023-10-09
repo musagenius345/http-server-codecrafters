@@ -1,4 +1,5 @@
 const net = require("net");
+const pathjoin = require('path')
 
 const fs = require("fs")
 // You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -43,6 +44,8 @@ const server = net.createServer((socket) => {
       console.log(`method: ${method}\n path: ${path}`)
       const filename = path.replace(/^\/files\//, '')
       const directory = process.argv[3]
+      const filePath = pathjoin.join(directory, filename)
+      console.log('filePath: ', filePath)
       console.log(`directory: ${directory}\nfile name: ${filename}`)
       // if (fs.existsSync(filePath)) {
       //   const fileContent = fs.readFileSync(filePath);
