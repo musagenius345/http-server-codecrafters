@@ -15,14 +15,14 @@ function parseRequest(req) {
   const userAgent = headerObject['User-Agent']
   console.log(headers)
   const [method, path, version] = startLine.split(' ')
-  return [path, userAgent]
+  return [method, path, userAgent]
 }
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
 
-    const [path, userAgent] = parseRequest(data.toString().trim());
+    const [method, path, userAgent] = parseRequest(data.toString().trim());
     const echoEndPoint = path.startsWith('/echo/');
     const filesEndPoint = path.startsWith('/files/');
     const userAgentEndPoint = path === '/user-agent'
