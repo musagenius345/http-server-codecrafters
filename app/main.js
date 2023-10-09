@@ -21,24 +21,25 @@ function parseRequest(req) {
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
-    const path = parseRequest(data.toString().trim())
-    const echoEndPoint = path.startsWith('/echo/')
-    let response
-    console.log(path)
-    switch (path) {
-      case '/':
-        response = `HTTP/1.1 200 OK${CLRF}`;
-        break
-      case echoEndPoint:
-        const randomString = path.replace(/^\/echo\//, '') 
-        console.log('Body: ',  body)
-        console.log('Random String: ',  randomString)
-        response = `HTTP/1.1 200 OK${CLRF}Content-Type: text/plain${CLRF}Content-Length: ${body.length}${CLRF}${randomString}`
-        break
-      default:
-        response = `HTTP/1.1 404 Not Found${CLRF}`;
+
+    const path = parseRequest(data.toString().trim());
+    const echoEndPoint = path.startsWith('/echo/');
+    let response;
+
+    console.log(path);
+
+    if (path === '/') {
+      response = `HTTP/1.1 200 OK${CLRF}`;
+    } else if (echoEndPoint) {
+      const randomString = path.replace(/^\/echo\//, '');
+      console.log('Body: ', body);
+      console.log('Random String: ', randomString);
+      response = `HTTP/1.1 200 OK${CLRF}Content-Type: text/plain${CLRF}Content-Length: ${body.length}${CLRF}${randomString}`;
+    } else {
+      response = `HTTP/1.1 404 Not Found${CLRF}`;
     }
-    
+
+
     socket.write(response, "utf-8", () => {
       console.log('Response sent to client')
       socket.end()
