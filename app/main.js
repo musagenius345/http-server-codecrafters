@@ -39,10 +39,18 @@ const server = net.createServer((socket) => {
     } else if (userAgentEndPoint) {
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${userAgent.length}${CRLF}${userAgent}`
     }
-    else {
-      response = `HTTP/1.1 404 Not Found${CRLF}`;
-    }
+    else if (rawPath.startsWith('/files/') && method === 'GET') {
+      const directory = process.argv[3];
+      const filename = path.split('/files/')[1];
+      const filePath = path.join(directory, filename);
 
+      if (fs.existsSync(filePath)) {
+        const fileContent = fs.readFileSync(filePath);
+        response = `HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: ${fileContent.length}\r\n\r\n${fileContent}`;
+      } else {
+      response = `HTTP/1.1 404 Not Found${CRLF}`;
+      }
+    }
 
     socket.write(response, "utf-8", () => {
       console.log('Response sent to client')
