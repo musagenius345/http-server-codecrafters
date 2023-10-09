@@ -10,9 +10,9 @@ const HOST = 'localhost'
 function parseRequest(req) {
   const [startLine, ...headers] = req.split('\r\n')
 
-const headerObject = Object.fromEntries(headers.map(line => line.split(': ')));
+  const headerObject = Object.fromEntries(headers.map(line => line.split(': ')));
   const userAgent = headerObject['User-Agent']
-  console.log(headers)   
+  console.log(headers)
   const [method, path, version] = startLine.split(' ')
   return [path, userAgent]
 }
@@ -23,7 +23,7 @@ const server = net.createServer((socket) => {
 
     const [path, userAgent] = parseRequest(data.toString().trim());
     const echoEndPoint = path.startsWith('/echo/');
-    const userAgentEndPoint = path.startsWith('/user-agent');
+    const userAgentEndPoint = path === '/user-agent'
     let response;
 
     console.log(`Path: ${path}`);
@@ -35,7 +35,7 @@ const server = net.createServer((socket) => {
       const randomString = path.replace(/^\/echo\//, '');
       console.log('Random String: ', randomString);
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${randomString.length}${CRLF}${randomString}`;
-    } else if(userAgentEndPoint){
+    } else if (userAgentEndPoint) {
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 11${CRLF}${userAgent}`
     }
     else {
