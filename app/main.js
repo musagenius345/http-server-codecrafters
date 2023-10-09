@@ -14,7 +14,7 @@ function parseRequest(req) {
 
   const headerObject = Object.fromEntries(headers.map(line => line.split(': ')));
   const userAgent = headerObject['User-Agent']
-  console.log(headers)
+  // console.log(headers)
   const [method, path, version] = startLine.split(' ')
   return [ method, path, userAgent]
 }
