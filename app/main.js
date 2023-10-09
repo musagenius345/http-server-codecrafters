@@ -33,7 +33,7 @@ const server = net.createServer((socket) => {
     } else if (echoEndPoint) {
       const randomString = path.replace(/^\/echo\//, '');
       console.log('Random String: ', randomString);
-      response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain$\r\nContent-Length: ${randomString.length}${CLRF}${randomString}`;
+      response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${randomString.length}${CLRF}${randomString}`;
     } else {
       response = `HTTP/1.1 404 Not Found${CLRF}`;
     }
