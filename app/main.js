@@ -1,5 +1,5 @@
 const net = require("net");
-const pathjoin = require('path')
+const path = require('path')
 
 const fs = require("fs")
 // You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -15,35 +15,35 @@ function parseRequest(req) {
   const headerObject = Object.fromEntries(headers.map(line => line.split(': ')));
   const userAgent = headerObject['User-Agent']
   // console.log(headers)
-  const [method, path, version] = startLine.split(' ')
-  return [ method, path, userAgent, responseBody]
+  const [method, rawPath, version] = startLine.split(' ')
+  return [ method,rawPath, userAgent, responseBody]
 }
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
 
-    const [method, path, userAgent, responseBody] = parseRequest(data.toString().trim());
-    const echoEndPoint = path.startsWith('/echo/');
-    const filesEndPoint = path.startsWith('/files/');
-    const userAgentEndPoint = path === '/user-agent'
+    const [method, rawPath, userAgent, responseBody] = parseRequest(data.toString().trim());
+    const echoEndPoint = rawPath.startsWith('/echo/');
+    const filesEndPoint = rawPath.startsWith('/files/');
+    const userAgentEndPoint = rawPath === '/user-agent'
     let response;
 
-    console.log(`Path: ${path}`);
+    // console.log(`Path: ${rawPath}`);
 
-    if (path === '/') {
+    if (rawPath === '/') {
       response = `HTTP/1.1 200 OK${CRLF}`;
     } else if (echoEndPoint) {
-      const randomString = path.replace(/^\/echo\//, '');
+      const randomString = rawPath.replace(/^\/echo\//, '');
       // console.log('Random String: ', randomString);
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${randomString.length}${CRLF}${randomString}`;
     } else if (userAgentEndPoint) {
       response = `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${userAgent.length}${CRLF}${userAgent}`
     } else if (method === 'GET' && filesEndPoint) {
       // console.log(`method: ${method}\n path: ${path}`)
-      const filename = path.replace(/^\/files\//, '')
+      const filename = rawPath.replace(/^\/files\//, '')
       const directory = process.argv[3]
-      const filePath = pathjoin.join(directory, filename)
+      const filePath = path.join(directory, filename)
       // console.log('filePath: ', filePath)
       // console.log(`directory: ${directory}\nfile name: ${filename}`)
       if (fs.existsSync(filePath)) {
@@ -54,9 +54,9 @@ const server = net.createServer((socket) => {
       }
     } else if (method === 'POST' && filesEndPoint) {
       console.log(`method: ${method}\n path: ${path}`)
-      const filename = path.replace(/^\/files\//, '')
+      const filename = rawPath.replace(/^\/files\//, '')
       const directory = process.argv[3]
-      const filePath = pathjoin.join(directory, filename)
+      const filePath = path.join(directory, filename)
       //const fileContent = responseBody;
       
       console.log(`filePath: ${filePath}\nfileContent: ${responseBody}\ndirectory:${directory}`)
