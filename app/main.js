@@ -11,7 +11,7 @@ const CLRF = '\r\n\r\n'
   *@param {Buffer} req 
   * */
 function parseRequest(req){
-  const [startLine, ...headers] = req.toString().split(CLRF)
+  const [startLine, ...headers] = req.split(CLRF)
   const [method, path, version] = startLine.split('')
   return [method, path, version]
 }
@@ -19,7 +19,7 @@ function parseRequest(req){
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
-    const path = parseRequest(data)
+    const path = parseRequest(data.toString())
     let response
     if(path === '/'){
       response= `HTTP/1.1 200 OK${CLRF}`
