@@ -21,7 +21,7 @@ function parseRequest(req){
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
-    const path = parseRequest(data.toString().trim())
+    const [path] = parseRequest(data.toString().trim())
     let response
     console.log(path)
     if(path === '/'){
